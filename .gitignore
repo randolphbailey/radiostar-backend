@@ -1,6 +1,3 @@
-#Sequelize Config
-config/config.json
-
 # Logs
 logs
 *.log
