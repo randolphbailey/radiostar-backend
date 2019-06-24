@@ -7,7 +7,6 @@ var logger = require("morgan");
 var passport = require("passport");
 var helmet = require("helmet");
 var GoogleStrategy = require("passport-google-oauth20").Strategy;
-const B2 = require("backblaze-b2");
 const cors = require("cors");
 
 var expressRoutes = require("./routes/index");
@@ -29,24 +28,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(logger("dev"));
 app.use(express.json());
 app.use(cookieParser());
-
-//Initialize B2 Bucket
-const b2 = new B2({
-  applicationKeyId: process.env.B2_KEY_ID,
-  applicationKey: process.env.B2_APP_KEY
-});
-
-async function GetBucket() {
-  try {
-    await b2.authorize();
-    let response = await b2.getBucket({ bucketName: "radiostar" });
-    console.log(response.data);
-  } catch (err) {
-    console.log("Error getting bucket: ", err);
-  }
-}
-
-GetBucket();
 
 //Initialize Passport
 app.use(passport.initialize());
