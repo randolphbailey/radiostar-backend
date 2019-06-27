@@ -35,7 +35,7 @@ router.get("/upload/getURL", (req, res) => {
 });
 
 //Update DB with file upload info sent from front-end
-router.post("/upload/fileInfo", (req, res) => {
+router.put("/upload/fileInfo", (req, res) => {
   db.Video.update(
     {
       b2AccountId: req.body.accountId,
@@ -45,7 +45,7 @@ router.post("/upload/fileInfo", (req, res) => {
       b2ContentSHA1: req.body.contentSha1,
       b2ContentType: req.body.contentType,
       b2FileId: req.body.fileId,
-      b2FileInfo: JSON.stringify(req.body.fileInfo),
+      b2FileInfo: req.body.fileInfo,
       b2UploadTimestamp: req.body.uploadTimestamp
     },
     { where: { vId: req.body.fileInfo.vid } }

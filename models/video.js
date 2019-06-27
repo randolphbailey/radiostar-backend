@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     b2FileInfo: DataTypes.JSON,
     b2FileName: DataTypes.STRING,
     b2AuthorizationToken: DataTypes.STRING,
-    b2UploadTimestamp: DataTypes.INTEGER,
+    b2UploadTimestamp: DataTypes.BIGINT,
     b2UploadURL: { type: DataTypes.STRING, validate: { isUrl: true } }
   });
 
