@@ -12,12 +12,12 @@ const b2 = new B2({
 b2.authorize();
 
 //Sequelize init
-db.sequelize.sync({ force: false });
+db.sequelize.sync({ force: true });
 
 //Request URL to upload files to from Backblaze and update database with info
 router.get("/upload/getURL", (req, res) => {
   //Request upload URL
-  b2.getUploadUrl({ bucketId: "c683ce23e3bb71a16bbc0f14" }).then(b2Response => {
+  b2.getUploadUrl({ bucketId: process.env.BUCKET_ID }).then(b2Response => {
     //Generate unique video ID
     b2Response.data.vId = shortid.generate();
 
@@ -46,7 +46,11 @@ router.put("/upload/fileInfo", (req, res) => {
       b2ContentType: req.body.contentType,
       b2FileId: req.body.fileId,
       b2FileInfo: req.body.fileInfo,
-      b2UploadTimestamp: req.body.uploadTimestamp
+      b2UploadTimestamp: req.body.uploadTimestamp,
+      videoURL: "https://v.videopsi.com/file/videopsi/" + req.body.fileName,
+      b2FileName: req.body.fileName,
+      title: req.body.fileInfo.title,
+      description: req.body.fileInfo.description
     },
     { where: { vId: req.body.fileInfo.vid } }
   ).then(rowsUpdated => res.json(rowsUpdated));
