@@ -11,9 +11,6 @@ const b2 = new B2({
 });
 b2.authorize();
 
-//Sequelize init
-db.sequelize.sync({ force: true });
-
 //Request URL to upload files to from Backblaze and update database with info
 router.get("/upload/getURL", (req, res) => {
   //Request upload URL

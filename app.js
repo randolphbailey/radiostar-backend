@@ -2,6 +2,7 @@ require("dotenv").config();
 var express = require("express");
 var session = require("express-session");
 var path = require("path");
+var db = require("./models");
 var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
@@ -10,12 +11,15 @@ var helmet = require("helmet");
 const cors = require("cors");
 var LocalStrategy = require("passport-local").Strategy;
 
-var expressRoutes = require("./routes/index");
+var fileRoutes = require("./routes/index");
 
 var app = express();
 
 //Use helmet to enforce HTTP header security
 app.use(helmet());
+
+//Sequelize init
+db.sequelize.sync({ force: true });
 
 //Setup cross site ability
 var corsOptions = {
@@ -39,6 +43,6 @@ app.use(passport.session());
 
 //Passport config
 
-app.use("/", expressRoutes);
+app.use("/upload", fileRoutes);
 
 module.exports = app;
