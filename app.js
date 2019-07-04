@@ -10,23 +10,29 @@ var passport = require("passport");
 var helmet = require("helmet");
 const cors = require("cors");
 var LocalStrategy = require("passport-local").Strategy;
+const PORT = process.env.PORT || 3000;
 
-var fileRoutes = require("./routes/index");
+//Sequelize init
+db.sequelize
+  .authenticate()
+  .then(() => console.log("MySQL connection successful."))
+  .catch(err => console.error("Unable to connect to the database: ", err));
+if (process.env.SEQUELIZE_FORCE_SYNC) {
+  db.sequelize
+    .sync({ force: true })
+    .then(() => console.log("Models forcibly synchronized"))
+    .catch(err => console.error("Error synchronizing models: ", err));
+}
 
 var app = express();
+
+require("./config/passport");
 
 //Use helmet to enforce HTTP header security
 app.use(helmet());
 
-//Sequelize init
-db.sequelize.sync({ force: true });
-
 //Setup cross site ability
-var corsOptions = {
-  origin: "*",
-  optionsSuccessStatus: 200
-};
-app.use(cors(corsOptions));
+app.use(cors());
 
 //Use Express sessions
 app.use(session({ secret: process.env.EXPRESS_SESSION_SECRET }));
@@ -41,8 +47,8 @@ app.use(cookieParser());
 app.use(passport.initialize());
 app.use(passport.session());
 
-//Passport config
+require("./routes/index")(app);
+require("./routes/loginUser")(app);
+require("./routes/registerUser")(app);
 
-app.use("/upload", fileRoutes);
-
-module.exports = app;
+app.listen(PORT, () => console.log(`Express listening on port ${PORT}`));
