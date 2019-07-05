@@ -20,7 +20,7 @@ passport.use(
     (username, password, done) => {
       try {
         db.User.findOne({ where: { username: username } }).then(user => {
-          if (user === null) {
+          if (user !== null) {
             console.log("username already taken");
             return done(null, false, { message: "username already taken" });
           } else {
