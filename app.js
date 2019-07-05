@@ -9,7 +9,6 @@ var logger = require("morgan");
 var passport = require("passport");
 var helmet = require("helmet");
 const cors = require("cors");
-var LocalStrategy = require("passport-local").Strategy;
 const PORT = process.env.PORT || 3000;
 
 //Sequelize init
