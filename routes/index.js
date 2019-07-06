@@ -1,7 +1,6 @@
 const db = require("../models");
 const shortid = require("shortid");
 const passport = require("passport");
-const jsonwebtoken = require("jsonwebtoken");
 
 //Configure Backblaze B2 Integration
 const B2 = require("backblaze-b2");
