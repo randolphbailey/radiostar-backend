@@ -1,5 +1,6 @@
 const db = require("../models");
 const shortid = require("shortid");
+const passport = require("passport");
 
 //Configure Backblaze B2 Integration
 const B2 = require("backblaze-b2");
@@ -11,24 +12,28 @@ b2.authorize();
 
 module.exports = function(app) {
   //Request URL to upload files to from Backblaze and update database with info
-  app.get("/upload/getURL", (req, res) => {
-    //Request upload URL
-    b2.getUploadUrl({ bucketId: process.env.BUCKET_ID }).then(b2Response => {
-      //Generate unique video ID
-      b2Response.data.vId = shortid.generate();
+  app.get(
+    "/upload/getURL",
+    passport.authenticate("jwt", { session: false }),
+    (req, res) => {
+      //Request upload URL
+      b2.getUploadUrl({ bucketId: process.env.BUCKET_ID }).then(b2Response => {
+        //Generate unique video ID
+        b2Response.data.vId = shortid.generate();
 
-      //Send information needed for upload to front-end
-      res.send(b2Response.data);
+        //Send information needed for upload to front-end
+        res.send(b2Response.data);
 
-      //Create new video in database
-      db.Video.create({
-        vId: b2Response.data.vId,
-        b2BucketId: b2Response.data.bucketId,
-        b2AuthorizationToken: b2Response.data.authorizationToken,
-        b2UploadURL: b2Response.data.uploadUrl
-      }).then(res => console.log(res));
-    });
-  });
+        //Create new video in database
+        db.Video.create({
+          vId: b2Response.data.vId,
+          b2BucketId: b2Response.data.bucketId,
+          b2AuthorizationToken: b2Response.data.authorizationToken,
+          b2UploadURL: b2Response.data.uploadUrl
+        }).then(res => console.log(res));
+      });
+    }
+  );
 
   //Update DB with file upload info sent from front-end
   app.put("/upload/fileInfo", (req, res) => {

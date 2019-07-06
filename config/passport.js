@@ -81,7 +81,7 @@ passport.use(
   "jwt",
   new JWTstrategy(opts, (jwt_payload, done) => {
     try {
-      db.User.findOne({ where: { username: jwt_payload.id } }).then(user => {
+      db.User.findOne({ where: { id: jwt_payload.id } }).then(user => {
         if (user) {
           console.log("user found in db in passport");
           done(null, user);
