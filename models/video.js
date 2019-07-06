@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
     models.Video.belongsTo(models.User, {
       onDelete: "CASCADE",
       foreignKey: {
-        allowNull: false
+        allowNull: true
       }
     });
   };

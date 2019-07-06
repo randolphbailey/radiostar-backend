@@ -15,7 +15,7 @@ db.sequelize
   .authenticate()
   .then(() => console.log("MySQL connection successful."))
   .catch(err => console.error("Unable to connect to the database: ", err));
-if (process.env.SEQUELIZE_FORCE_SYNC == true) {
+if (process.env.SEQUELIZE_FORCE_SYNC == "true") {
   db.sequelize
     .sync({ force: true })
     .then(() => console.log("Models forcibly synchronized"))
@@ -44,6 +44,5 @@ app.use(passport.initialize());
 require("./routes/index")(app);
 require("./routes/loginUser")(app);
 require("./routes/registerUser")(app);
-require("./routes/testJwt")(app);
 
 app.listen(PORT, () => console.log(`Express listening on port ${PORT}`));

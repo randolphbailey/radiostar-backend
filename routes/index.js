@@ -1,6 +1,7 @@
 const db = require("../models");
 const shortid = require("shortid");
 const passport = require("passport");
+const jsonwebtoken = require("jsonwebtoken");
 
 //Configure Backblaze B2 Integration
 const B2 = require("backblaze-b2");
@@ -40,6 +41,7 @@ module.exports = function(app) {
     "/upload/fileInfo",
     passport.authenticate("jwt", { session: false }),
     (req, res) => {
+      console.log(req);
       db.Video.update(
         {
           b2AccountId: req.body.accountId,

@@ -11,9 +11,5 @@ module.exports = (sequelize, DataTypes) => {
     resetPasswordExpires: DataTypes.DATE
   });
 
-  User.associate = function(models) {
-    models.User.hasMany(models.Video);
-  };
-
   return User;
 };
