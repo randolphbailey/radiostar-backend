@@ -1,8 +1,7 @@
 require("dotenv").config();
-var express = require("express");
+var app = require("express")();
 var path = require("path");
 var db = require("./models");
-var cookieParser = require("cookie-parser");
 var bodyParser = require("body-parser");
 var logger = require("morgan");
 var passport = require("passport");
@@ -22,8 +21,6 @@ if (process.env.SEQUELIZE_FORCE_SYNC == "true") {
     .catch(err => console.error("Error synchronizing models: ", err));
 }
 
-var app = express();
-
 require("./config/passport");
 
 //Use helmet to enforce HTTP header security
@@ -34,9 +31,8 @@ app.use(cors());
 
 //Setup body-parser
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 app.use(logger("dev"));
-app.use(express.json());
-app.use(cookieParser());
 
 //Use Passport as middleware
 app.use(passport.initialize());

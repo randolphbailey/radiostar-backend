@@ -22,6 +22,7 @@ module.exports = function(app) {
         //Generate unique video ID
         b2Response.data.vId = shortid.generate();
 
+        console.log(req.user.id);
         //Send information needed for upload to front-end
         res.send(b2Response.data);
 
@@ -30,8 +31,9 @@ module.exports = function(app) {
           vId: b2Response.data.vId,
           b2BucketId: b2Response.data.bucketId,
           b2AuthorizationToken: b2Response.data.authorizationToken,
-          b2UploadURL: b2Response.data.uploadUrl
-        }).then(res => console.log(res));
+          b2UploadURL: b2Response.data.uploadUrl,
+          UserId: req.user.id
+        }).then(res => console.log("Success"));
       });
     }
   );
@@ -41,7 +43,6 @@ module.exports = function(app) {
     "/upload/fileInfo",
     passport.authenticate("jwt", { session: false }),
     (req, res) => {
-      console.log(req);
       db.Video.update(
         {
           b2AccountId: req.body.accountId,
