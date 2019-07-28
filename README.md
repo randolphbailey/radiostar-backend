@@ -34,3 +34,6 @@ This is an exhaustive step-by-step list of the procedure to upload a video to th
 * Sequelize
 * Backblaze B2 (via backblaze-b2 npm module)
 * JSON
+
+## Link to deployed site
+https://videopsi.com
