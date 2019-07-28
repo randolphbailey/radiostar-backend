@@ -13,7 +13,7 @@ const b2 = new B2({
 async function GetBucket() {
   try {
     await b2.authorize(); // must authorize first
-    let response = await b2.getBucket({ bucketName: "my-bucket" });
+    let response = await b2.getBucket({ bucketName: "videopsi" });
     console.log(response.data);
   } catch (err) {
     console.log("Error getting bucket:", err);
