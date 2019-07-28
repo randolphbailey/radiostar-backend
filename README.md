@@ -20,7 +20,11 @@ PassportJS is used to provide user registration and authentication.  A local str
 This is an exhaustive step-by-step list of the procedure to upload a video to the site.  Front end steps are also included.
 1. User completes form on front end with video title, description, and file to be uploaded.
 2. Upon file field change, an SHA-1 hash of the file is calculated to be sent to B2 for data integrity.
-3. User requests file upload start with GET request to...
+3. User requests file upload start with GET request to /upload/getURL route.
+4. Server requests upload URL from B2 and creates new video entry in database.  Upload URL is returned to user in JSON.
+5. Front end starts file upload to B2 using URL returned from server.
+6. Upon completion, B2 returns JSON with video information.
+7. Front end forwards this infomation to /upload/fileInfo route.  Server updates database entry with new information.
 
 ## Technologies Used
 * Node
