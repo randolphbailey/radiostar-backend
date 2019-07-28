@@ -8,7 +8,18 @@ const b2 = new B2({
   applicationKeyId: process.env.B2_KEY_ID,
   applicationKey: process.env.B2_APP_KEY
 });
-b2.authorize();
+
+//Init B2
+async function GetBucket() {
+  try {
+    await b2.authorize(); // must authorize first
+    let response = await b2.getBucket({ bucketName: "my-bucket" });
+    console.log(response.data);
+  } catch (err) {
+    console.log("Error getting bucket:", err);
+  }
+}
+GetBucket();
 
 module.exports = function(app) {
   //Request URL to upload files to from Backblaze and update database with info
@@ -17,23 +28,29 @@ module.exports = function(app) {
     passport.authenticate("jwt", { session: false }),
     (req, res) => {
       //Request upload URL
-      b2.getUploadUrl({ bucketId: process.env.BUCKET_ID }).then(b2Response => {
-        //Generate unique video ID
-        b2Response.data.vId = shortid.generate();
+      b2.getUploadUrl({ bucketId: process.env.BUCKET_ID })
+        .then(b2Response => {
+          //Generate unique video ID
+          b2Response.data.vId = shortid.generate();
 
-        console.log(req.user.id);
-        //Send information needed for upload to front-end
-        res.send(b2Response.data);
+          console.log(req.user.id);
+          //Send information needed for upload to front-end
+          res.send(b2Response.data);
 
-        //Create new video in database
-        db.Video.create({
-          vId: b2Response.data.vId,
-          b2BucketId: b2Response.data.bucketId,
-          b2AuthorizationToken: b2Response.data.authorizationToken,
-          b2UploadURL: b2Response.data.uploadUrl,
-          UserId: req.user.id
-        }).then(res => console.log("Success"));
-      });
+          //Create new video in database
+          db.Video.create({
+            vId: b2Response.data.vId,
+            b2BucketId: b2Response.data.bucketId,
+            b2AuthorizationToken: b2Response.data.authorizationToken,
+            b2UploadURL: b2Response.data.uploadUrl,
+            UserId: req.user.id
+          })
+            .then(res => console.log("Success"))
+            .catch(err =>
+              console.error("SQL Error while creating new video: ", err)
+            );
+        })
+        .catch(err => console.error("Backblaze Error: ", err));
     }
   );
 
