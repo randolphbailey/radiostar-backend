@@ -33,23 +33,19 @@ module.exports = function(app) {
           //Generate unique video ID
           b2Response.data.vId = shortid.generate();
 
-          console.log(req.user.id);
           //Send information needed for upload to front-end
           res.send(b2Response.data);
 
           //Create new video in database
-          db.Video.create({
+          return db.Video.create({
             vId: b2Response.data.vId,
             b2BucketId: b2Response.data.bucketId,
             b2AuthorizationToken: b2Response.data.authorizationToken,
             b2UploadURL: b2Response.data.uploadUrl,
             UserId: req.user.id
-          })
-            .then(res => console.log("Success"))
-            .catch(err =>
-              console.error("SQL Error while creating new video: ", err)
-            );
+          });
         })
+        .then(res => console.log("New Video Created in DB on route getURL"))
         .catch(err => console.error("Backblaze Error: ", err));
     }
   );
@@ -76,7 +72,13 @@ module.exports = function(app) {
           description: req.body.fileInfo.description
         },
         { where: { vId: req.body.fileInfo.vid } }
-      ).then(rowsUpdated => res.json(rowsUpdated));
+      )
+        .then(res =>
+          console.log("DB updated with video info for route fileInfo")
+        )
+        .catch(err =>
+          console.error("Error updating DB with video info for route fileInfo")
+        );
     }
   );
 };
