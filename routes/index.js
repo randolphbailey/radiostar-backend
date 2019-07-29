@@ -23,7 +23,7 @@ GetBucket();
 
 module.exports = function(app) {
   //Request URL to upload files to from Backblaze and update database with info
-  app.get(
+  app.post(
     "/upload/getURL",
     passport.authenticate("jwt", { session: false }),
     (req, res) => {
@@ -42,7 +42,9 @@ module.exports = function(app) {
             b2BucketId: b2Response.data.bucketId,
             b2AuthorizationToken: b2Response.data.authorizationToken,
             b2UploadURL: b2Response.data.uploadUrl,
-            UserId: req.user.id
+            UserId: req.user.id,
+            title: req.body.title,
+            description: req.body.description
           });
         })
         .then(res => console.log("New Video Created in DB on route getURL"))
@@ -67,9 +69,7 @@ module.exports = function(app) {
           b2FileInfo: req.body.fileInfo,
           b2UploadTimestamp: req.body.uploadTimestamp,
           videoURL: "https://v.videopsi.com/file/videopsi/" + req.body.fileName,
-          b2FileName: req.body.fileName,
-          title: req.body.fileInfo.title,
-          description: req.body.fileInfo.description
+          b2FileName: req.body.fileName
         },
         { where: { vId: req.body.fileInfo.vid } }
       )
