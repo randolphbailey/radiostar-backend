@@ -41,5 +41,6 @@ require("./routes/index")(app);
 require("./routes/loginUser")(app);
 require("./routes/registerUser")(app);
 require("./routes/loginReturningUser")(app);
+require("./routes/getVideo")(app);
 
 app.listen(PORT, () => console.log(`Express listening on port ${PORT}`));

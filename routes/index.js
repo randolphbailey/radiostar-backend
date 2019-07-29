@@ -14,7 +14,7 @@ async function GetBucket() {
   try {
     await b2.authorize(); // must authorize first
     let response = await b2.getBucket({ bucketName: "videopsi" });
-    console.log("B2 Authorized");
+    console.log("B2");
   } catch (err) {
     console.log("Error getting bucket:", err);
   }
@@ -73,9 +73,9 @@ module.exports = function(app) {
         },
         { where: { vId: req.body.fileInfo.vid } }
       )
-        .then(res =>
-          console.log("DB updated with video info for route fileInfo")
-        )
+        .then(rowsUpdated => {
+          res.json(rowsUpdated);
+        })
         .catch(err =>
           console.error("Error updating DB with video info for route fileInfo")
         );
