@@ -36,6 +36,8 @@ module.exports = function(app) {
           //Send information needed for upload to front-end
           res.send(b2Response.data);
 
+          console.log(req.body);
+
           //Create new video in database
           return db.Video.create({
             vId: b2Response.data.vId,
